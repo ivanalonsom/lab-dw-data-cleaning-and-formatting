@@ -29,32 +29,31 @@ def fix_gender(x):
         return x
 
 
-def replace_state(df):
+def fix_state(df):
     reemplazos = {"AZ": "Arizona", "Cali": "California", "WA": "Washington"}
-    return df["st"].replace(reemplazos)
+    df["state"] = df["state"].replace(reemplazos)
+    return df
 
-df["education"] = df["education"].str.replace("Bachelors", "Bachelor")
+def fix_education(df):
+    df["education"] = df["education"].str.replace("Bachelors", "Bachelor")
+    return df
 
-df["customer_lifetime_value"] = df["customer_lifetime_value"].str.replace("%", "")
-
-replaced_car = {"Sports Car" : "Luxury", "Luxury SUV" : "Luxury", "Luxury Car" : "Luxury"}
-
-df["vehicle_class"] = df["vehicle_class"].replace(replaced_car)
-
-
-
+def fix_lifetime_value(df):
+    df["customer_lifetime_value"] = df["customer_lifetime_value"].str.replace("%", "")
+    return df
 
 
+def fix_vehicle_class(df):
+    replaced_car = {"Sports Car" : "Luxury", "Luxury SUV" : "Luxury", "Luxury Car" : "Luxury"}
+    df["vehicle_class"] = df["vehicle_class"].replace(replaced_car)
+    return df
 
 
+def change_object_to_float(df):
+    
+    df = df.astype(float)
+    return df
 
-
-
-
-
-# Your code here
-
-df["customer_lifetime_value"] = df["customer_lifetime_value"].astype(float)
 
 def fix_open_complaints(x):
 
@@ -65,36 +64,22 @@ def fix_open_complaints(x):
         return x_splitted[1]
 
 
-df["number_of_open_complaints"] = df["number_of_open_complaints"].apply(fix_open_complaints)
+def drop_null_values(df):
+
+    df.dropna(inplace=True)         
+    return df
 
 
+def keep_last_duplicate(df):
+    
+    df.drop_duplicates(subset=["state", "income"], keep='last', inplace=True) 
+    return df
 
 
-
-# Your code here
-
-df.isnull().apply(lambda x: x.value_counts())  
-
-df.dropna(inplace=True)         # If one cell is empty, it drops the row. We lose about 60 rows of a total of 1071 so it´s not a big problem to handle the data this way
-
-df.isnull().apply(lambda x: x.value_counts())  
+def new_index_reseted(df):
+    df.reset_index(drop=True, inplace=True)     # drop True elimina el índice original y se reemplaza con uno nuevo que empieza de 0. Con False (por defecto) crea una nueva col con los índices nuevos
+    return df
 
 
-
-
-
-
-
-
-print(f"Before: {df.duplicated(subset=["state", "income"]).sum()}")
-       
-df.drop_duplicates(subset=["state", "income"], keep='last', inplace=True)          # By default, it keeps the first occurence
-
-print(f"After: {df.duplicated(subset=["state", "income"]).sum()}")
-
-
-
-
-df.reset_index(drop=True, inplace=True)     # drop True elimina el índice original y se reemplaza con uno nuevo que empieza de 0. Con False (por defecto) crea una nueva col con los índices nuevos
-
-df.to_csv('ex5_file.csv', index=True) 
+def create_csv(df):
+    df.to_csv('ex5_file.csv', index=True) 
