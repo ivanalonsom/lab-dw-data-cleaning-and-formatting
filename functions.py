@@ -29,23 +29,23 @@ def fix_gender(x):
         return x
 
 
-def fix_state(df):
-    reemplazos = {"AZ": "Arizona", "Cali": "California", "WA": "Washington"}
-    df["state"] = df["state"].replace(reemplazos)
+def fix_state(df, map):
+    
+    df = df.replace(map)
     return df
 
 def fix_education(df):
-    df["education"] = df["education"].str.replace("Bachelors", "Bachelor")
+    df = df.str.replace("Bachelors", "Bachelor")
     return df
 
 def fix_lifetime_value(df):
-    df["customer_lifetime_value"] = df["customer_lifetime_value"].str.replace("%", "")
+    df = df.str.replace("%", "")
     return df
 
 
-def fix_vehicle_class(df):
-    replaced_car = {"Sports Car" : "Luxury", "Luxury SUV" : "Luxury", "Luxury Car" : "Luxury"}
-    df["vehicle_class"] = df["vehicle_class"].replace(replaced_car)
+def fix_vehicle_class(df, map):
+    
+    df = df.replace(map)
     return df
 
 
